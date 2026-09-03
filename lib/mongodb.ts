@@ -1,3 +1,4 @@
+import dns from "node:dns";
 import mongoose, { type Mongoose } from "mongoose";
 
 function getMongoUri(): string {
@@ -8,6 +9,17 @@ function getMongoUri(): string {
   }
 
   return uri;
+}
+
+function configureMongoDns(): void {
+  const servers = process.env.MONGODB_DNS_SERVERS
+    ?.split(",")
+    .map((server) => server.trim())
+    .filter(Boolean);
+
+  if (servers?.length) {
+    dns.setServers(servers);
+  }
 }
 
 interface MongooseCache {
@@ -29,6 +41,10 @@ export async function connectToDatabase(): Promise<Mongoose> {
   if (cached.connection) {
     return cached.connection;
   }
+
+  // Some local routers reject MongoDB's SRV DNS queries. Allow a configured
+  // resolver to be used for MongoDB Atlas connection strings.
+  configureMongoDns();
 
   // Reuse an in-flight connection so concurrent requests do not open duplicates.
   cached.promise ??= mongoose.connect(getMongoUri());
