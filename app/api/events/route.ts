@@ -3,36 +3,12 @@ import { v2 as cloudinary } from "cloudinary";
 import { connectToDatabase } from "@/lib/mongodb";
 import { Event } from "@/database/event.model";
 
-
-
-/*cloudinary.config({
+cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
   secure: true,
-});*/
-
-function parseArray(val: unknown): string[] {
-  if (!val) return [];
-  if (Array.isArray(val)) {
-    return val.map((v) => String(v).trim()).filter(Boolean);
-  }
-  const str = String(val).trim();
-  if (str.startsWith("[") && str.endsWith("]")) {
-    try {
-      const parsed = JSON.parse(str);
-      if (Array.isArray(parsed)) {
-        return parsed.map((v) => String(v).trim()).filter(Boolean);
-      }
-    } catch {
-      // Fallback to split if JSON parsing fails
-    }
-  }
-  return str
-    .split(",")
-    .map((v) => v.trim())
-    .filter(Boolean);
-}
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -44,13 +20,8 @@ export async function POST(req: NextRequest) {
 
     if (!file) return NextResponse.json({ message: "Image is required" }, { status: 400 });
 
-    let tags = JSON.parse(formData.get('tags')as string);
-    let agenda = JSON.parse(formData.get('agenda')as string);
-
-
-    // Parse array fields sent as JSON strings from multipart form
-    //event.tags = parseArray(event.tags);
-    //event.agenda = parseArray(event.agenda);
+    const tags = JSON.parse(formData.get("tags") as string);
+    const agenda = JSON.parse(formData.get("agenda") as string);
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
@@ -100,9 +71,11 @@ export async function GET() {
       { status: 200 }
     );
   } catch (error: unknown) {
-    console.error("GET /api/events error:", error);
     const errorMessage =
-      error instanceof Error ? error.message : "Unknown error";
+      error instanceof Error ? error.message : "An unexpected server error occurred.";
+
+    console.error("GET /api/events error:", error);
+
     return NextResponse.json(
       { message: "Event fetching failed", error: errorMessage },
       { status: 500 }

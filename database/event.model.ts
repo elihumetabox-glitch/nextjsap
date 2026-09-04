@@ -1,6 +1,7 @@
-import { model, models, Schema, type HydratedDocument, type Model } from "mongoose";
+import { model, models, Schema, type HydratedDocument, type Model, type Types } from "mongoose";
 
 export interface EventDocument {
+  _id?: Types.ObjectId | string;
   title: string;
   slug: string;
   description: string;
