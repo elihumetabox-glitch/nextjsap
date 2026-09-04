@@ -4,14 +4,13 @@ import { EventDocument } from "@/database/event.model";
 import { cacheLife } from "next/cache";
 
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+import { getEvents } from "@/lib/actions/event.actions";
 
 const Page = async () => {
     'use cache';
-    cacheLife('hours')
+    cacheLife('hours');
 
-    const response = await fetch(`${BASE_URL}/api/events`);
-    const {events} = await response.json();
+    const events = await getEvents();
 
 
 
@@ -21,6 +20,8 @@ const Page = async () => {
             <h1 className="text-center">The Hub for Every Dev <br/> Event You Can&apos;t Miss</h1>
             <p className="text-center mt-5">Hackathon, Meetups and Conferences, All in One Place</p>
             <ExploreBtn />
+
+            
 
             <div className="mt-20 space-y-7">
                 <h3>Featured Events</h3>
