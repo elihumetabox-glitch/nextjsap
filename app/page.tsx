@@ -2,7 +2,7 @@ import ExploreBtn from "@/components/ExploreBtn";
 import EventCard from "@/components/EventCard";
 import { EventDocument } from "@/database/event.model";
 import { cacheLife } from "next/cache";
-//import {events} from "@/lib/constants";
+import events from "@/lib/constants";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
@@ -10,13 +10,13 @@ const Page = async () => {
      'use cache';
      cacheLife('hours')
 
-    const response = await fetch(`${BASE_URL}/api/events`);
+    //const response = await fetch(`${BASE_URL}/api/events`);
+    //const {events} = await response.json();
 
-    if (!response.ok) {
+    /*if (!response.ok) {
         throw new Error(`Failed to fetch events: ${response.status} ${response.statusText}`);
-    }
+    }*/
 
-    const {events} = await response.json();
 
 
     return (
