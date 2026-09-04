@@ -1,23 +1,29 @@
 import ExploreBtn from "@/components/ExploreBtn";
 import EventCard from "@/components/EventCard";
-import {EventDocument} from "@/database/event.model";
-import {cacheLife} from "next/cache";
-
+import { EventDocument } from "@/database/event.model";
+import { cacheLife } from "next/cache";
+//import {events} from "@/lib/constants";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
 const Page = async () => {
-    'use cache';
-    cacheLife('hours')
+     'use cache';
+     cacheLife('hours')
 
     const response = await fetch(`${BASE_URL}/api/events`);
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch events: ${response.status} ${response.statusText}`);
+    }
+
     const {events} = await response.json();
+
 
     return (
         <section>
-            <h1  className="text-center">The Hub for Every Dev <br/> Event You Can't Miss</h1>
+            <h1 className="text-center">The Hub for Every Dev <br/> Event You Can&apos;t Miss</h1>
             <p className="text-center mt-5">Hackathon, Meetups and Conferences, All in One Place</p>
-            <ExploreBtn/>
+            <ExploreBtn />
 
             <div className="mt-20 space-y-7">
                 <h3>Featured Events</h3>
@@ -25,12 +31,13 @@ const Page = async () => {
                 <ul className="events">
                     {events && events.length > 0 && events.map((event: EventDocument) => (
                         <li key={event.title}>
-                            <EventCard{...event}/>
+                            <EventCard {...event} />
                         </li>
                     ))}
                 </ul>
             </div>
         </section>
-    )
-}
-export default Page
+    );
+};
+
+export default Page;
