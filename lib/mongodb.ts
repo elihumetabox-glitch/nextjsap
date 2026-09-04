@@ -2,6 +2,12 @@ import dns from "node:dns";
 import mongoose, { type Mongoose } from "mongoose";
 
 function applyMongoDns(): void {
+  // On Vercel / AWS Lambda, use native system DNS resolver.
+  // Overriding DNS on Vercel can cause SRV query timeouts because outbound port 53 to custom IPs is blocked.
+  if (process.env.VERCEL) {
+    return;
+  }
+
   const customServers = process.env.MONGODB_DNS_SERVERS
     ?.split(",")
     .map((server) => server.trim())
