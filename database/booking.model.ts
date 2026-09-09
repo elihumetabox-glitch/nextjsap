@@ -39,6 +39,7 @@ const bookingSchema = new Schema<BookingDocument>(
   { timestamps: true },
 );
 
+
 // Bookings are commonly queried by event, so index the reference field.
 bookingSchema.index({ eventId: 1 });
 
