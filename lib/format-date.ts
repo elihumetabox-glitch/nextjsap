@@ -1,10 +1,3 @@
-const eventDateFormatter = new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  timeZone: "UTC",
-});
-
 export function formatEventDate(date: string): string {
   const parsedDate = new Date(date);
 
@@ -12,5 +5,5 @@ export function formatEventDate(date: string): string {
     return date;
   }
 
-  return eventDateFormatter.format(parsedDate);
+  return parsedDate.toISOString().slice(0, 10);
 }
