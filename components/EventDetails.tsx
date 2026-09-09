@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { cacheLife } from "next/cache";
+import { formatEventDate } from "@/lib/format-date";
 import BookEvent from "@/components/BookEvent";
 import EventCard from "@/components/EventCard";
 import getSimilarEventsBySlug, { getEventBySlug } from "@/lib/actions/event.actions";
@@ -58,7 +59,7 @@ const EventDetails = async ({ slug }: { slug: string }) => {
                     </section>
                     <section className="flex-col-gap-2">
                         <h2>Event Details</h2>
-                        <EventDetailsItem icon="/icons/calendar.svg" alt="calendar" label={date} />
+                        <EventDetailsItem icon="/icons/calendar.svg" alt="calendar" label={formatEventDate(date)} />
                         <EventDetailsItem icon="/icons/clock.svg" alt="clock" label={time} />
                         <EventDetailsItem icon="/icons/pin.svg" alt="pin" label={location} />
                         <EventDetailsItem icon="/icons/mode.svg" alt="mode" label={mode} />
